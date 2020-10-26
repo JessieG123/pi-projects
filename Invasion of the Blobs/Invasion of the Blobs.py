@@ -6,6 +6,7 @@ import pygame, os, random
 from pygame.locals import *
 
 #TODO: Need to modify this game so that it's playable using the joystick
+##
 import explorerhat as exh
 
 random.seed()
