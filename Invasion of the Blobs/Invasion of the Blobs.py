@@ -55,13 +55,18 @@ class Ship(pygame.sprite.Sprite):
         self.frame = 0
 
     def update(self):
+        #TODO: change to joystick
         key = pygame.key.get_pressed()
+        #NOTE: Joystick left
         if key[K_LEFT]:
             self.rect.move_ip(-5, 0)
+        #NOTE: Joystick right
         if key[K_RIGHT]:
             self.rect.move_ip(5, 0)
 
+        #TODO: change to joystick
         self.reload_timer += 1
+        #NOTE: i think it's shooting
         if key[K_SPACE] and not self.overheated:
             self.heat += 0.75
             if self.reload_timer >= self.reload_time:
@@ -399,6 +404,7 @@ class Game:
                 if e.type == QUIT:
                     pygame.quit()
                     return
+                #TODO: change to joystick
                 if e.type == KEYDOWN:
                     if e.key == K_ESCAPE:
                         self.paused ^= 1
@@ -421,6 +427,7 @@ class Game:
                 if e.type == QUIT:
                     pygame.quit()
                     return
+                #TODO: change to joystick
                 if e.type == KEYDOWN:
                     if e.key == K_ESCAPE:
                         pygame.quit()
