@@ -12,9 +12,8 @@ import time
 
 analogInx = exh.analog[0]
 analogIny = exh.analog[1]
+pushButton = exh.input[0]
 
-x = analogInx.read()
-y = analogIny.read()
 
 #From joystickLights.py example in Tutorial. 
 def high(x):
@@ -36,12 +35,20 @@ def left():
     print("left y: ", y)
     if (low(y)):
         return True
+    return False
         
 def right():
     x = analogInx.read()
     y = analogIny.read()
     if (high(y)):
         return True
+    return False
+
+def button():
+    buttonState = pushButton.read()
+    if(buttonState == 1):
+        return True
+    return False
 
 
 random.seed()
@@ -102,7 +109,7 @@ class Ship(pygame.sprite.Sprite):
         #TODO: change to joystick
         self.reload_timer += 1
         #NOTE: i think it's shooting
-        if key[K_SPACE] and not self.overheated:
+        if button() and not self.overheated:
             self.heat += 0.75
             if self.reload_timer >= self.reload_time:
                 self.reload_timer = 0
