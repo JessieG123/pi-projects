@@ -489,7 +489,7 @@ class Game:
                         return
                     if e.key == K_p:
                         self.paused ^= 1
-            #TODO: change to joystickk
+            #TODO: change to joystick
             if down():
                 option = 2
             if up():
