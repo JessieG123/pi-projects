@@ -9,6 +9,17 @@ from pygame.locals import *
 ##
 import explorerhat as exh
 
+analogInx = exh.analog[0]
+analogIny = exh.analog[1]
+
+x = analogInx.read()
+y = analogIny.read()
+
+def left():
+    if (x >= 2.3 and x <= 2.8):
+        if (y >= 0 and y <= 0.4):
+            return True
+
 random.seed()
 WORLD = Rect(0, 0, 480, 550)
 
@@ -56,9 +67,9 @@ class Ship(pygame.sprite.Sprite):
 
     def update(self):
         #TODO: change to joystick
-        key = pygame.key.get_pressed()
+        # key = pygame.key.get_pressed()
         #NOTE: Joystick left
-        if key[K_LEFT]:
+        if (left()):
             self.rect.move_ip(-5, 0)
         #NOTE: Joystick right
         if key[K_RIGHT]:
