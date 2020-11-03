@@ -8,6 +8,7 @@ from pygame.locals import *
 #TODO: Need to modify this game so that it's playable using the joystick
 ##
 import explorerhat as exh
+import time
 
 analogInx = exh.analog[0]
 analogIny = exh.analog[1]
@@ -15,10 +16,33 @@ analogIny = exh.analog[1]
 x = analogInx.read()
 y = analogIny.read()
 
+#From joystickLights.py example in Tutorial. 
+def high(x):
+    if (x >= 4.5):
+        return True
+    else:
+        return False
+    
+def low(x):
+    if (x <= 0.01):
+        return True
+    else:
+        return False
+
 def left():
-    if (x >= 2.3 and x <= 2.8):
-        if (y >= 0 and y <= 0.4):
-            return True
+    x = analogInx.read()
+    y = analogIny.read()
+    print("left x: ", x)
+    print("left y: ", y)
+    if (low(y)):
+        return True
+        
+def right():
+    x = analogInx.read()
+    y = analogIny.read()
+    if (high(y)):
+        return True
+
 
 random.seed()
 WORLD = Rect(0, 0, 480, 550)
@@ -67,12 +91,12 @@ class Ship(pygame.sprite.Sprite):
 
     def update(self):
         #TODO: change to joystick
-        # key = pygame.key.get_pressed()
+        key = pygame.key.get_pressed()
         #NOTE: Joystick left
-        if (left()):
+        if left():
             self.rect.move_ip(-5, 0)
         #NOTE: Joystick right
-        if key[K_RIGHT]:
+        if right():
             self.rect.move_ip(5, 0)
 
         #TODO: change to joystick
