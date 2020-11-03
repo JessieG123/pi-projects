@@ -6,9 +6,8 @@ import pygame, os, random
 from pygame.locals import *
 
 #TODO: Need to modify this game so that it's playable using the joystick
-##
 import explorerhat as exh
-import time
+#import time
 
 analogInx = exh.analog[0]
 analogIny = exh.analog[1]
@@ -43,6 +42,21 @@ def right():
     if (high(y)):
         return True
     return False
+
+def up():
+    x = analogInx.read()
+    y = analogIny.read()
+    if high(x):
+        return True
+    return False
+
+def down():
+    x = analogInx.read()
+    y = analogIny.read()
+    if low(x):
+        return True
+    return False
+
 
 def button():
     buttonState = pushButton.read()
@@ -98,11 +112,10 @@ class Ship(pygame.sprite.Sprite):
 
     def update(self):
         #TODO: change to joystick
-        key = pygame.key.get_pressed()
-        #NOTE: Joystick left
+        #key = pygame.key.get_pressed()
+        #NOTE: really slow. Not sure if its computer issues or 
         if left():
             self.rect.move_ip(-5, 0)
-        #NOTE: Joystick right
         if right():
             self.rect.move_ip(5, 0)
 
@@ -469,23 +482,24 @@ class Game:
                 if e.type == QUIT:
                     pygame.quit()
                     return
-                #TODO: change to joystick
+                
                 if e.type == KEYDOWN:
                     if e.key == K_ESCAPE:
                         pygame.quit()
                         return
                     if e.key == K_p:
                         self.paused ^= 1
-                    if e.key == K_DOWN:
-                        option = 2
-                    if e.key == K_UP:
-                        option = 1
-                    if e.key == K_RETURN:
-                        if option == 1:
-                            self.gameLoop()
-                        if option == 2:
-                            pygame.quit()
-                            return
+            #TODO: change to joystick
+            if down():
+                option = 2
+            if up():
+                option = 1
+            if button():
+                if option == 1:
+                    self.gameLoop()
+                if option == 2:
+                    pygame.quit()
+                    return
 
             self.screen.fill((0, 0, 0))
             self.bg.draw(self.screen)
