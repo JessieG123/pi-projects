@@ -15,7 +15,12 @@ sensor = mpu6050(0x68)
 def is_touch():
     touch = exh.touch.one
     return touch.is_pressed()
-        
+
+def left():
+    gyro_data = sensor.get_gyro_data()
+    
+def right():
+    gyro_data = sensor.get_gyro_data()
 
 random.seed()
 WORLD = Rect(0, 0, 480, 550)
