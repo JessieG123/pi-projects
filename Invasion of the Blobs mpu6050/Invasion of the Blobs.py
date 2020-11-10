@@ -8,6 +8,14 @@ from pygame.locals import *
 #TODO: Need to modify this game so that it's playable using the mpu6050
 ##
 import explorerhat as exh
+from mpu6050 import mpu6050
+
+sensor = mpu6050(0x68)
+
+def is_touch():
+    touch = exh.touch.one
+    return touch.is_pressed()
+        
 
 random.seed()
 WORLD = Rect(0, 0, 480, 550)
@@ -64,10 +72,9 @@ class Ship(pygame.sprite.Sprite):
         if key[K_RIGHT]:
             self.rect.move_ip(5, 0)
 
-        #TODO: change to mpu6050
         self.reload_timer += 1
-        #NOTE: i think it's shooting
-        if key[K_SPACE] and not self.overheated:
+        #using touch 1 on the explorer hat
+        if is_touch() and not self.overheated:
             self.heat += 0.75
             if self.reload_timer >= self.reload_time:
                 self.reload_timer = 0
