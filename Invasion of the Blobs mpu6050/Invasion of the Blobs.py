@@ -445,12 +445,13 @@ class Game:
                         option = 2
                     if e.key == K_UP:
                         option = 1
-                    if e.key == K_RETURN:
-                        if option == 1:
-                            self.gameLoop()
-                        if option == 2:
-                            pygame.quit()
-                            return
+            #if touch pad 1 is pressed 
+            if is_touch():
+                if option == 1:
+                    self.gameLoop()
+                if option == 2:
+                    pygame.quit()
+                    return
 
             self.screen.fill((0, 0, 0))
             self.bg.draw(self.screen)
