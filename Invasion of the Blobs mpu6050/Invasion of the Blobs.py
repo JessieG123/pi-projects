@@ -12,6 +12,9 @@ from mpu6050 import mpu6050
 
 sensor = mpu6050(0x68)
 
+accel_data = sensor.get_accel_data()
+gyro_data = sensor.get_gyro_data()
+
 def is_touch():
     touch = exh.touch.one
     return touch.is_pressed()
@@ -69,12 +72,14 @@ class Ship(pygame.sprite.Sprite):
 
     def update(self):
         #TODO: change to mpu6050
+        gyro_data = sensor.get_gyro_data()
         key = pygame.key.get_pressed()
         #NOTE: left
-        if key[K_LEFT]:
+        #FIXME: its really shaky
+        if int(gyro_data['x']) < 0:
             self.rect.move_ip(-5, 0)
         #NOTE: right
-        if key[K_RIGHT]:
+        if int(gyro_data['x']) > 0:
             self.rect.move_ip(5, 0)
 
         self.reload_timer += 1
@@ -446,10 +451,16 @@ class Game:
                         return
                     if e.key == K_p:
                         self.paused ^= 1
-                    if e.key == K_DOWN:
-                        option = 2
-                    if e.key == K_UP:
-                        option = 1
+            gyro_data = sensor.get_gyro_data()
+            #FIXME: flicky here as well
+            previous_gyro_data = int(gyro_data['y'])
+            # down
+            if int(gyro_data['y']) < -10:
+                option = 2
+                previous_gyro_data = int(gyro_data['y'])
+            #up
+            if int(gyro_data['y']) > 10:
+                option = 1
             #if touch pad 1 is pressed 
             if is_touch():
                 if option == 1:
