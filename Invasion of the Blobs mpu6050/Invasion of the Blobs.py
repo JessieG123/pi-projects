@@ -11,19 +11,10 @@ import explorerhat as exh
 from mpu6050 import mpu6050
 
 sensor = mpu6050(0x68)
-
-accel_data = sensor.get_accel_data()
-gyro_data = sensor.get_gyro_data()
-
+#check if touch 1 pad is pressed
 def is_touch():
     touch = exh.touch.one
     return touch.is_pressed()
-
-def left():
-    gyro_data = sensor.get_gyro_data()
-    
-def right():
-    gyro_data = sensor.get_gyro_data()
 
 random.seed()
 WORLD = Rect(0, 0, 480, 550)
@@ -71,19 +62,17 @@ class Ship(pygame.sprite.Sprite):
         self.frame = 0
 
     def update(self):
-        #TODO: change to mpu6050
         gyro_data = sensor.get_gyro_data()
-        key = pygame.key.get_pressed()
-        #NOTE: left
-        #FIXME: its really shaky
+        #key = pygame.key.get_pressed()
+        #NOTE: left 
         if int(gyro_data['x']) < 0:
-            self.rect.move_ip(-5, 0)
+            self.rect.move_ip(int(gyro_data['x']), 0)
         #NOTE: right
         if int(gyro_data['x']) > 0:
-            self.rect.move_ip(5, 0)
+            self.rect.move_ip(int(gyro_data['x']), 0)
 
         self.reload_timer += 1
-        #using touch 1 on the explorer hat
+        #touch 1 on the explorer hat
         if is_touch() and not self.overheated:
             self.heat += 0.75
             if self.reload_timer >= self.reload_time:
@@ -421,7 +410,6 @@ class Game:
                 if e.type == QUIT:
                     pygame.quit()
                     return
-                #TODO: change to mpu6050
                 if e.type == KEYDOWN:
                     if e.key == K_ESCAPE:
                         self.paused ^= 1
@@ -444,7 +432,6 @@ class Game:
                 if e.type == QUIT:
                     pygame.quit()
                     return
-                #TODO: change to mpu6050
                 if e.type == KEYDOWN:
                     if e.key == K_ESCAPE:
                         pygame.quit()
@@ -452,12 +439,9 @@ class Game:
                     if e.key == K_p:
                         self.paused ^= 1
             gyro_data = sensor.get_gyro_data()
-            #FIXME: flicky here as well
-            previous_gyro_data = int(gyro_data['y'])
-            # down
+            #down
             if int(gyro_data['y']) < -10:
                 option = 2
-                previous_gyro_data = int(gyro_data['y'])
             #up
             if int(gyro_data['y']) > 10:
                 option = 1
