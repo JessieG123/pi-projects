@@ -6,7 +6,7 @@ import pygame, os, random
 from pygame.locals import *
 
 #TODO: Need to modify this game so that it's playable using the mpu6050
-##
+
 import explorerhat as exh
 from mpu6050 import mpu6050
 
