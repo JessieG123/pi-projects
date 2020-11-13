@@ -6,8 +6,61 @@ import pygame, os, random
 from pygame.locals import *
 
 #TODO: Need to modify this game so that it's playable using the joystick
-##
 import explorerhat as exh
+
+analogInx = exh.analog[0]
+analogIny = exh.analog[1]
+pushButton = exh.input[0]
+
+#From joystickLights.py example in Tutorial. 
+def high(x):
+    if (x >= 4.5):
+        return True
+    else:
+        return False
+    
+def low(x):
+    if (x <= 0.01):
+        return True
+    else:
+        return False
+#hold the joystick such that the wires and pins are facing away from you
+#joystick left
+def left():
+    x = analogInx.read()
+    y = analogIny.read()
+    if (low(y)):
+        return True
+    return False
+#joystick right   
+def right():
+    x = analogInx.read()
+    y = analogIny.read()
+    if (high(y)):
+        return True
+    return False
+#joystick up
+def up():
+    x = analogInx.read()
+    y = analogIny.read()
+    if high(x):
+        return True
+    return False
+#joystick down
+def down():
+    x = analogInx.read()
+    y = analogIny.read()
+    if low(x):
+        return True
+    return False
+
+#if button pressed
+def button():
+    buttonState = pushButton.read()
+    if(buttonState == 1):
+        return True
+    return False
+
 
 random.seed()
 WORLD = Rect(0, 0, 480, 550)
@@ -55,19 +108,15 @@ class Ship(pygame.sprite.Sprite):
         self.frame = 0
 
     def update(self):
-        #TODO: change to joystick
-        key = pygame.key.get_pressed()
-        #NOTE: Joystick left
-        if key[K_LEFT]:
+        #key = pygame.key.get_pressed()
+        #joystick left and right to move left and right
+        if left():
             self.rect.move_ip(-5, 0)
-        #NOTE: Joystick right
-        if key[K_RIGHT]:
+        if right():
             self.rect.move_ip(5, 0)
-
-        #TODO: change to joystick
         self.reload_timer += 1
-        #NOTE: i think it's shooting
-        if key[K_SPACE] and not self.overheated:
+        #joystick button to shoot
+        if button() and not self.overheated:
             self.heat += 0.75
             if self.reload_timer >= self.reload_time:
                 self.reload_timer = 0
@@ -404,7 +453,6 @@ class Game:
                 if e.type == QUIT:
                     pygame.quit()
                     return
-                #TODO: change to joystick
                 if e.type == KEYDOWN:
                     if e.key == K_ESCAPE:
                         self.paused ^= 1
@@ -427,23 +475,25 @@ class Game:
                 if e.type == QUIT:
                     pygame.quit()
                     return
-                #TODO: change to joystick
+                
                 if e.type == KEYDOWN:
                     if e.key == K_ESCAPE:
                         pygame.quit()
                         return
                     if e.key == K_p:
                         self.paused ^= 1
-                    if e.key == K_DOWN:
-                        option = 2
-                    if e.key == K_UP:
-                        option = 1
-                    if e.key == K_RETURN:
-                        if option == 1:
-                            self.gameLoop()
-                        if option == 2:
-                            pygame.quit()
-                            return
+            #joystick up and down to highlight menu options
+            if down():
+                option = 2
+            if up():
+                option = 1
+            #joystick button press to select
+            if button():
+                if option == 1:
+                    self.gameLoop()
+                if option == 2:
+                    pygame.quit()
+                    return
 
             self.screen.fill((0, 0, 0))
             self.bg.draw(self.screen)
