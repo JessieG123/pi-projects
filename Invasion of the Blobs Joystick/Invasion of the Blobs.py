@@ -7,12 +7,10 @@ from pygame.locals import *
 
 #TODO: Need to modify this game so that it's playable using the joystick
 import explorerhat as exh
-#import time
 
 analogInx = exh.analog[0]
 analogIny = exh.analog[1]
 pushButton = exh.input[0]
-
 
 #From joystickLights.py example in Tutorial. 
 def high(x):
@@ -26,30 +24,29 @@ def low(x):
         return True
     else:
         return False
-
+#hold the joystick such that the wires and pins are facing away from you
+#joystick left
 def left():
     x = analogInx.read()
     y = analogIny.read()
-    print("left x: ", x)
-    print("left y: ", y)
     if (low(y)):
         return True
     return False
-        
+#joystick right   
 def right():
     x = analogInx.read()
     y = analogIny.read()
     if (high(y)):
         return True
     return False
-
+#joystick up
 def up():
     x = analogInx.read()
     y = analogIny.read()
     if high(x):
         return True
     return False
-
+#joystick down
 def down():
     x = analogInx.read()
     y = analogIny.read()
@@ -57,7 +54,7 @@ def down():
         return True
     return False
 
-
+#if button pressed
 def button():
     buttonState = pushButton.read()
     if(buttonState == 1):
@@ -111,17 +108,14 @@ class Ship(pygame.sprite.Sprite):
         self.frame = 0
 
     def update(self):
-        #TODO: change to joystick
         #key = pygame.key.get_pressed()
-        #NOTE: really slow. Not sure if its computer issues or 
+        #joystick left and right to move left and right
         if left():
             self.rect.move_ip(-5, 0)
         if right():
             self.rect.move_ip(5, 0)
-
-        #TODO: change to joystick
         self.reload_timer += 1
-        #NOTE: i think it's shooting
+        #joystick button to shoot
         if button() and not self.overheated:
             self.heat += 0.75
             if self.reload_timer >= self.reload_time:
@@ -459,7 +453,6 @@ class Game:
                 if e.type == QUIT:
                     pygame.quit()
                     return
-                #TODO: change to joystick
                 if e.type == KEYDOWN:
                     if e.key == K_ESCAPE:
                         self.paused ^= 1
@@ -489,11 +482,12 @@ class Game:
                         return
                     if e.key == K_p:
                         self.paused ^= 1
-            #TODO: change to joystick
+            #joystick up and down to highlight menu options
             if down():
                 option = 2
             if up():
                 option = 1
+            #joystick button press to select
             if button():
                 if option == 1:
                     self.gameLoop()
