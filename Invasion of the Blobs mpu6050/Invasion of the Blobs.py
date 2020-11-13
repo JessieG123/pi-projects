@@ -6,8 +6,16 @@ import pygame, os, random
 from pygame.locals import *
 
 #TODO: Need to modify this game so that it's playable using the mpu6050
-##
+
 import explorerhat as exh
+from mpu6050 import mpu6050
+
+sensor = mpu6050(0x68)
+#hold the mpu6050 such that the touch 1 pad is facing you
+#check if touch 1 pad is pressed
+def is_touch():
+    touch = exh.touch.one
+    return touch.is_pressed()
 
 random.seed()
 WORLD = Rect(0, 0, 480, 550)
@@ -55,19 +63,18 @@ class Ship(pygame.sprite.Sprite):
         self.frame = 0
 
     def update(self):
-        #TODO: change to mpu6050
-        key = pygame.key.get_pressed()
-        #NOTE: left
-        if key[K_LEFT]:
-            self.rect.move_ip(-5, 0)
+        gyro_data = sensor.get_gyro_data()
+        #key = pygame.key.get_pressed()
+        #NOTE: left 
+        if int(gyro_data['x']) < 0:
+            self.rect.move_ip(int(gyro_data['x']), 0)
         #NOTE: right
-        if key[K_RIGHT]:
-            self.rect.move_ip(5, 0)
+        if int(gyro_data['x']) > 0:
+            self.rect.move_ip(int(gyro_data['x']), 0)
 
-        #TODO: change to mpu6050
         self.reload_timer += 1
-        #NOTE: i think it's shooting
-        if key[K_SPACE] and not self.overheated:
+        #touch 1 on the explorer hat
+        if is_touch() and not self.overheated:
             self.heat += 0.75
             if self.reload_timer >= self.reload_time:
                 self.reload_timer = 0
@@ -404,7 +411,6 @@ class Game:
                 if e.type == QUIT:
                     pygame.quit()
                     return
-                #TODO: change to mpu6050
                 if e.type == KEYDOWN:
                     if e.key == K_ESCAPE:
                         self.paused ^= 1
@@ -427,23 +433,26 @@ class Game:
                 if e.type == QUIT:
                     pygame.quit()
                     return
-                #TODO: change to mpu6050
                 if e.type == KEYDOWN:
                     if e.key == K_ESCAPE:
                         pygame.quit()
                         return
                     if e.key == K_p:
                         self.paused ^= 1
-                    if e.key == K_DOWN:
-                        option = 2
-                    if e.key == K_UP:
-                        option = 1
-                    if e.key == K_RETURN:
-                        if option == 1:
-                            self.gameLoop()
-                        if option == 2:
-                            pygame.quit()
-                            return
+            gyro_data = sensor.get_gyro_data()
+            #down
+            if int(gyro_data['y']) < -10:
+                option = 2
+            #up
+            if int(gyro_data['y']) > 10:
+                option = 1
+            #if touch pad 1 is pressed 
+            if is_touch():
+                if option == 1:
+                    self.gameLoop()
+                if option == 2:
+                    pygame.quit()
+                    return
 
             self.screen.fill((0, 0, 0))
             self.bg.draw(self.screen)
