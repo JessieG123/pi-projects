@@ -11,6 +11,7 @@ import explorerhat as exh
 from mpu6050 import mpu6050
 
 sensor = mpu6050(0x68)
+#hold the mpu6050 such that the touch 1 pad is facing you
 #check if touch 1 pad is pressed
 def is_touch():
     touch = exh.touch.one
