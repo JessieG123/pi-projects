@@ -18,14 +18,14 @@ volatile unsigned int *gpio;
 void *gpioMap;
 int fdGPIO;
 
-// TODO Define the GPIO pin numbers here. Look at top left of 'explorer-hat-schematic' image
-#define MOSI  x
-#define MISO  x
+// GPIO Pin 9, 10 from explorer hat schematic
+#define TX_MISO  9
+#define RX_MOSI  10
 
-// TODO Define the GPFSEL and GPSET and GPCLR registers here - look in peripheral manual starting at pp. 89
-#define GPFSEL0 x
-#define GPFSEL1 x
-#define GPSET0 x
+// TODO: Define the GPFSEL and GPSET and GPCLR registers here - look in peripheral manual starting at pp. 89
+#define GPFSEL0 0
+#define GPFSEL1 1
+#define GPSET0 x //TODO: Find out why. In Lights example it was 7 and 10. 
 #define GPCLR0 x
 #define GPPUD 37
 #define GPPUDCLK0 38
@@ -34,9 +34,8 @@ int fdGPIO;
 //TODO: Change to US100 things
 void initUs100() {
     unsigned peripheralBase = bcm_host_get_peripheral_address();
-    
     // TODO print out peripheralBase and peripheralBase + OFFSET to confirm
-    fprintf( stderr, "%08x %08x\n", ..., ... );
+    fprintf( stderr, "%08x %08x\n", peripheralBase, peripheralBase + GPIO_OFFSET);
     fdGPIO = open("/dev/mem", O_RDWR|O_SYNC);
     gpioMap = (unsigned int *)mmap(
         NULL,
@@ -57,25 +56,26 @@ void initUs100() {
 
     register unsigned int r;
     
-    
-    //TODO: CHANGE TO US100 -> read microsecond clock ins ystem timer registers? 
-    // TODO Set LED1 to output
-    /// STEPS:
+    // Set TX_MISO (Pin 9) to output (001)
     /// set register r by accessing gpio[]
-    /// Clear the 3 bits for this pin to 0 using &=
+    r = gpio[GPFSEL0];
+    // Clear the 3 bits for this pin to 0 using &=
+    r &= ~(0b111 << 27);
     /// Set the 3 bits to output using |=
+    r |= (0b001 << 27);
     /// Set gpio[] = r
+    gpio[GPFSEL0] = r;
     
-    // TODO Set LED4 to output
-    /// STEPS:
-    /// set register r by accessing gpio[]
-    /// Clear the 3 bits for this pin to 0 using &=
-    /// Set the 3 bits to output using |=
-    /// Set gpio[] = r
+    // Set RX_MOSI (Pin 10) to input (000)
+    // set register r by accessing gpio[]
+    r = gpio[GPFSEL1];
+    // Clear the 3 bits for this pin to 0 using &= this also sets the 3 bits to 000 for input. 
+    r &= ~(0b111);
+    // Set gpio[] = r
+    gpio[GPFSEL1] = r;
 
         
-	//TODO: MAKE SURE TO CHANGE THIS TOO US100   
-    /// NOTHING TODO HERE. Disabling done for you.
+	//TODO: Update this to Pi 4 things
     // Disable the pull-up/pull-down control line for GPIO pin 23. We follow the
     // procedure outlined on page 101 of the BCM2837 ARM Peripherals manual. The
     // internal pull-up and pull-down resistor isn't needed for an output pin.
@@ -104,8 +104,8 @@ void freeUs100() {
     close( fdGPIO );
 }
 
-// TODO Implement functions here -> calcuateDistance part? 
+// TODO Implement functions here
+//FIXME: change this to something so that you can calculate distance in python instead
 void calculateDistance() {
     
 }
-

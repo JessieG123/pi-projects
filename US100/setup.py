@@ -11,8 +11,6 @@ ext_modules = [
                library_dirs = ["/opt/vc/lib"]
     )
 ]
-
-
     
 setup(
     name = "us100",
