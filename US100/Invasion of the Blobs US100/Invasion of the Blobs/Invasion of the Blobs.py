@@ -6,15 +6,29 @@
 
 import pygame, os, random
 from pygame.locals import *
-import us100 #FIXME: import error. Might need to move the files in to the folder or change the file name?
+import ultrasonic #FIXME: import error. Might need to move the files in to the folder or change the file name?
+import time
 
-def pulseTx():
-    #TxHigh()
-    #wait 100us
-    #TxLow()
+u = ultrasonic.Ultrasonic()
 
-def calculateDistance():
+def pulseTx(u):
+    u.txHigh()
+    time.sleep(0.0001) #wait 100us
+    u.txLow()
+
+def calculateDistance(u):
     # Wait for Rx pin to go high
+    while (u.checkRxLevel() == 0):
+        #time.sleep(0.000001)
+        pass
+    t1 = time.perf_counter()
+    while (u.checkRxLevel() == 1):
+        #time.sleep(0.000001)
+        pass
+    t2 = time.perf_counter()
+    timePeriod = t2 - t1
+    
+    return 0.5 * timePeriod * 34300
     # Record the time t1
     # Wait for Rx pin to go low
     # Record time t2
@@ -69,6 +83,12 @@ class Ship(pygame.sprite.Sprite):
     def update(self):
         key = pygame.key.get_pressed()
         #TODO: modify this part
+        #FIXME: distance is very very small all the time
+        #pulseTx(u)
+        distance = calculateDistance(u)
+        print(distance)
+        
+        
         if key[K_LEFT]:
             self.rect.move_ip(-5, 0)
         if key[K_RIGHT]:
@@ -491,7 +511,10 @@ class Game:
             self.all.update()
             self.bg.update()
             self.pauseLoop()
-
+            
+            #TODO: mayve here
+            pulseTx(u)
+            
             for e in pygame.event.get():
                 if e.type == QUIT:
                     pygame.quit()

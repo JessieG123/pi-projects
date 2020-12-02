@@ -4,8 +4,8 @@ from Cython.Build import cythonize
 
 #TODO: Check to make sure it's correct
 ext_modules = [
-    Extension( "us100",
-               sources=["us100-wrapper.pyx", 'us100.c'],
+    Extension( "ultrasonic",
+               sources=["ultrasonic-wrapper.pyx", 'ultrasonic.c'],
                include_dirs = ["/opt/vc/include"],
                libraries = [ "bcm_host" ],
                library_dirs = ["/opt/vc/lib"]
@@ -13,6 +13,6 @@ ext_modules = [
 ]
     
 setup(
-    name = "us100",
+    name = "ultrasonic",
     ext_modules = cythonize( ext_modules )
 )
