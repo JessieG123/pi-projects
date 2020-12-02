@@ -111,6 +111,7 @@ void txLow() {
     gpio[GPCLR0] = 1 << TX_MISO;
 }
 
+//FIXME: void can you return things? might need to be int
 void checkRxLevel() {
     if (gpio[GPLEV0] >> RX_MOSI == 1) {
         return 1;
@@ -123,8 +124,3 @@ void checkRxLevel() {
     }
 }
 
- //Wait for Rx pin to go high
-    //Record the time t1
-    //Wait for Rx pin to go low
-    //Record time t2
-    //distance = 1/2(t2 - t1) * 340m/s

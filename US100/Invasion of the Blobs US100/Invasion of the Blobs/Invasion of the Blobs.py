@@ -6,8 +6,19 @@
 
 import pygame, os, random
 from pygame.locals import *
-import us100 #FIXME: import error. Might need to change the name of the file
+import us100 #FIXME: import error. Might need to move the files in to the folder or change the file name?
 
+def pulseTx():
+    #TxHigh()
+    #wait 100us
+    #TxLow()
+
+def calculateDistance():
+    # Wait for Rx pin to go high
+    # Record the time t1
+    # Wait for Rx pin to go low
+    # Record time t2
+    # distance = 1/2(t2 - t1) * 340m/s
 
 
 random.seed()
