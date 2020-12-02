@@ -6,13 +6,14 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <bcm_host.h>
-#include <time.h>
+#include <time.h> //TODO: is this suppose to be here
 
 
 #define BLOCK_SIZE 4096
 
-//TODO: Double check it's the correct offset
 #define GPIO_OFFSET 0x200000
+//TODO: HOW TO ADD TIMER? 
+#define TIMER_OFFSET 0x0000b000
 
 volatile unsigned int *gpio;
 void *gpioMap;
@@ -25,16 +26,14 @@ int fdGPIO;
 // TODO: Define the GPFSEL and GPSET and GPCLR registers here - look in peripheral manual starting at pp. 89
 #define GPFSEL0 0
 #define GPFSEL1 1
-#define GPSET0 x //TODO: Find out why. In Lights example it was 7 and 10. 
-#define GPCLR0 x
-#define GPPUD 37
-#define GPPUDCLK0 38
-#define GPLEV0 13
+#define GPSET0 6 //TODO: Find out why. In Lights example it was 7 and 10 in the old manual
+#define GPCLR0 8
+#define GPLEV0 10
+#define GPIO_PUP_PDN_CNTRL_REG0 57
 
 //TODO: Change to US100 things
 void initUs100() {
     unsigned peripheralBase = bcm_host_get_peripheral_address();
-    // TODO print out peripheralBase and peripheralBase + OFFSET to confirm
     fprintf( stderr, "%08x %08x\n", peripheralBase, peripheralBase + GPIO_OFFSET);
     fdGPIO = open("/dev/mem", O_RDWR|O_SYNC);
     gpioMap = (unsigned int *)mmap(
@@ -57,46 +56,44 @@ void initUs100() {
     register unsigned int r;
     
     // Set TX_MISO (Pin 9) to output (001)
-    /// set register r by accessing gpio[]
     r = gpio[GPFSEL0];
-    // Clear the 3 bits for this pin to 0 using &=
     r &= ~(0b111 << 27);
-    /// Set the 3 bits to output using |=
     r |= (0b001 << 27);
-    /// Set gpio[] = r
     gpio[GPFSEL0] = r;
     
     // Set RX_MOSI (Pin 10) to input (000)
-    // set register r by accessing gpio[]
     r = gpio[GPFSEL1];
-    // Clear the 3 bits for this pin to 0 using &= this also sets the 3 bits to 000 for input. 
     r &= ~(0b111);
-    // Set gpio[] = r
     gpio[GPFSEL1] = r;
 
         
-	//TODO: Update this to Pi 4 things
+	//TODO: Update this to Pi 4 and US100 things
     // Disable the pull-up/pull-down control line for GPIO pin 23. We follow the
     // procedure outlined on page 101 of the BCM2837 ARM Peripherals manual. The
     // internal pull-up and pull-down resistor isn't needed for an output pin.
 
     // Disable pull-up/pull-down by setting bits 0:1
     // to 00 in the GPIO Pull-Up/Down Register 
-    gpio[GPPUD] = 0x0;
-    r = 150;
-    while (r--) {
-      asm volatile("nop");
-    }
-    gpio[GPPUDCLK0] = (0x1 << LED4) | (0x1 << LED1);
-    r = 150;
-    while (r--) {
-      asm volatile("nop");
-    }
-    gpio[GPPUDCLK0] = 0;
+
+    gpio[GPIO_PUP_PDN_CNTRL_REG0] &= ~(0b00 << (2 * TX_MISO)); //no resistor for pin 9 TX_MISO
+    gpio[GPIO_PUP_PDN_CNTRL_REG0] &= ~(0b00 << (2 * RX_MOSI)); //no resistor for pin 10 RX_MOSI
+        
+    // gpio[GPPUD] = 0x0;
+    // r = 150;
+    // while (r--) {
+    //   asm volatile("nop");
+    // }
+    // gpio[GPPUDCLK0] = (0x1 << LED4) | (0x1 << LED1);
+    // r = 150;
+    // while (r--) {
+    //   asm volatile("nop");
+    // }
+    // gpio[GPPUDCLK0] = 0;
     
-    // clearing the output line
-    gpio[GPCLR0] = 1 << LED4;
-    gpio[GPCLR0] = 1 << LED1;
+    //TODO: check if needed
+    // clearing the output and input line
+    gpio[GPCLR0] = 1 << TX_MISO;
+    gpio[GPCLR0] = 1 << RX_MOSI;
 }
 
 void freeUs100() {
@@ -104,8 +101,30 @@ void freeUs100() {
     close( fdGPIO );
 }
 
-// TODO Implement functions here
-//FIXME: change this to something so that you can calculate distance in python instead
-void calculateDistance() {
-    
+// TODO: IS this correct? 
+//calculate distance/time things in python
+void txHigh() {
+    gpio[GPSET0] = 1 << TX_MISO;
 }
+
+void txLow() {
+    gpio[GPCLR0] = 1 << TX_MISO;
+}
+
+void checkRxLevel() {
+    if (gpio[GPLEV0] >> RX_MOSI == 1) {
+        return 1;
+    }
+    else
+    {
+        if(gpio[GPLEV0] >> RX_MOSI == 0) {
+            return 0;
+        }
+    }
+}
+
+ //Wait for Rx pin to go high
+    //Record the time t1
+    //Wait for Rx pin to go low
+    //Record time t2
+    //distance = 1/2(t2 - t1) * 340m/s

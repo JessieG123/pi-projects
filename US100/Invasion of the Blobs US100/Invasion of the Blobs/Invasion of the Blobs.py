@@ -6,6 +6,9 @@
 
 import pygame, os, random
 from pygame.locals import *
+import us100 #FIXME: import error. Might need to change the name of the file
+
+
 
 random.seed()
 WORLD = Rect(0, 0, 480, 550)
@@ -54,6 +57,7 @@ class Ship(pygame.sprite.Sprite):
 
     def update(self):
         key = pygame.key.get_pressed()
+        #TODO: modify this part
         if key[K_LEFT]:
             self.rect.move_ip(-5, 0)
         if key[K_RIGHT]:
