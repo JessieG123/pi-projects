@@ -84,9 +84,12 @@ void initUltrasonic() {
     gpio[GPIO_PUP_PDN_CNTRL_REG0] &= ~(0b00 << (2 * TX_MISO)); //no resistor for pin 9 TX_MISO
     gpio[GPIO_PUP_PDN_CNTRL_REG0] &= ~(0b00 << (2 * RX_MOSI)); //no resistor for pin 10 RX_MOSI
     
-    //TODO: check if needed
-    // clearing the output and input line
+    
+    // clearing the input line
     gpio[GPCLR0] = 1 << TX_MISO;
+    
+    //TODO: check if needed
+    //gpio[GPSET0] = 1 << TX_MISO;
     //gpio[GPCLR0] = 1 << RX_MOSI;
 }
 
@@ -124,20 +127,22 @@ void freeTimer() {
 
 //calculate distance and time things in python
 void txHigh() {
-    gpio[GPSET0] &= 1 << TX_MISO;
+    gpio[GPSET0] = 1 << TX_MISO;
+
 }
 
 void txLow() {
-    gpio[GPCLR0] &= 1 << TX_MISO;
+    gpio[GPCLR0] = 1 << TX_MISO;
+
 }
 
-int getTxLevel() {
+unsigned int getTxLevel() {
     unsigned int level = (gpio[GPLEV0] >> TX_MISO) & 1;
     
     return level;
 }
 
-int checkRxLevel() {
+unsigned int checkRxLevel() {
     unsigned int level = (gpio[GPLEV0] >> TX_MISO) & 1;
     
     return level;
