@@ -12,28 +12,43 @@ import time
 u = ultrasonic.Ultrasonic()
 
 def pulseTx(u):
+    print("BEFRE txHigh:" + str(u.getTxLevel()))
     u.txHigh()
+    print("AFTER txHigh:" + str(u.getTxLevel()))
     time.sleep(0.0001) #wait 100us
+    print("BEFRE txLow:" + str(u.getTxLevel()))
     u.txLow()
+    print("AFTER tcLow:" + str(u.getTxLevel()))
 
 #FIXME: need to use system timer
 def calculateDistance(u):
     # Wait for Rx pin to go high
+    print("rx level 1: " + str(u.checkRxLevel()))
+    
     while (u.checkRxLevel() == 0):
         #time.sleep(0.000001)
         pass
-    t1 = time.perf_counter()
+    t1 = u.getSystemTimerCounter() / 1000000
+    print("t1: " + str(t1) + "\n")
+    
+    print("rx level 2: " + str(u.checkRxLevel()))
     while (u.checkRxLevel() == 1):
         #time.sleep(0.000001)
         pass
-    t2 = time.perf_counter()
-    timePeriod = t2 - t1
+    t2 = u.getSystemTimerCounter() /1000000
+    print("t2: " + str(t2) + "\n")
+    timePeriod = (t2 - t1) #seconds
     
-    return 0.5 * timePeriod * 34300
+    print("timePeriod: " + str(timePeriod))
+    
+    distance = 0.5 * timePeriod * 343
+    print("distance: " + str(distance))
+    
+    return distance
     # Record the time t1
     # Wait for Rx pin to go low
     # Record time t2
-    # distance = 1/2(t2 - t1) * 340m/s
+    # distance = 1/2(t2 - t1) * 343m/s
 
 
 random.seed()
@@ -85,9 +100,17 @@ class Ship(pygame.sprite.Sprite):
         key = pygame.key.get_pressed()
         #TODO: modify this part
         #FIXME: distance is very very small all the time
-        #pulseTx(u)
+        pulseTx(u)
+
+        #print("BEFORE txHigh")
+        #u.txHigh()
+        #print("BEFORE timesleep")
+        #time.sleep(0.0001) #wait 100us
+        #print("BEFORE txLow")
+        #u.txLow()
+        
         distance = calculateDistance(u)
-        print(distance)
+        #print(distance)
         
         
         if key[K_LEFT]:
@@ -514,7 +537,7 @@ class Game:
             self.pauseLoop()
             
             #TODO: mayve here
-            pulseTx(u)
+            #pulseTx(u)
             
             for e in pygame.event.get():
                 if e.type == QUIT:

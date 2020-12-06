@@ -25,8 +25,13 @@
 #define GPLEV0 10
 #define GPIO_PUP_PDN_CNTRL_REG0 57
 
-#define CLO 1
-#define CHI 2
+#define CS      0
+#define CLO     1
+#define CHI     2
+#define C0      3
+#define C1      4
+#define C2      5
+#define C3      6
 
 volatile unsigned int *gpio;
 void *gpioMap;
@@ -82,7 +87,7 @@ void initUltrasonic() {
     //TODO: check if needed
     // clearing the output and input line
     gpio[GPCLR0] = 1 << TX_MISO;
-    gpio[GPCLR0] = 1 << RX_MOSI;
+    //gpio[GPCLR0] = 1 << RX_MOSI;
 }
 
 //timer initialization
@@ -119,25 +124,23 @@ void freeTimer() {
 
 //calculate distance and time things in python
 void txHigh() {
-    gpio[GPSET0] = 1 << TX_MISO;
+    gpio[GPSET0] &= 1 << TX_MISO;
 }
 
 void txLow() {
-    gpio[GPCLR0] = 1 << TX_MISO;
+    gpio[GPCLR0] &= 1 << TX_MISO;
+}
+
+int getTxLevel() {
+    unsigned int level = (gpio[GPLEV0] >> TX_MISO) & 1;
+    
+    return level;
 }
 
 int checkRxLevel() {
-    if (gpio[GPLEV0] >> RX_MOSI == 1) {
-        return 1;
-    }
-    else
-    {
-        if(gpio[GPLEV0] >> RX_MOSI == 0) {
-            return 0;
-        }
-    }
-	
-	return -2;
+    unsigned int level = (gpio[GPLEV0] >> TX_MISO) & 1;
+    
+    return level;
 }
 
 void clearTxRx() {
@@ -160,5 +163,8 @@ unsigned long long getSystemTimerCounter() {
         l = timer[CLO];
      }
     // compose long long int value
+    //unsigned long long t = ((unsigned long long) h << 32) | (unsigned long long)l;
+    //fprintf( stdout, "time: 0x%016llx %5llds\n", t, t/1000000 );
     return ((unsigned long long) h << 32) | (unsigned long long)l;
+    
 }

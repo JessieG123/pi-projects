@@ -4,9 +4,10 @@ cdef extern void freeUltrasonic()
 cdef extern void freeTimer()
 cdef extern void txHigh()
 cdef extern void txLow()
-cdef extern void checkRxLevel()
+cdef extern int getTxLevel()
+cdef extern int checkRxLevel()
 cdef extern void clearTxRx()
-cdef extern void getSystemTimerCounter()
+cdef extern unsigned long long getSystemTimerCounter()
 
 #TODO: Double check
 class Ultrasonic: 
@@ -25,8 +26,11 @@ class Ultrasonic:
     def txLow(self):
         return txLow()
     
+    def getTxLevel(self):
+        return getTxLevel()
+    
     def checkRxLevel(self):
         return checkRxLevel()
 
-    def getSystemTimerCounter():
+    def getSystemTimerCounter(self):
         return getSystemTimerCounter()

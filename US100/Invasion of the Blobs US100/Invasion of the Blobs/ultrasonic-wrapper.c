@@ -1083,6 +1083,12 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
                                int py_line, const char *filename);
 
 /* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
+
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_PY_LONG_LONG(unsigned PY_LONG_LONG value);
+
+/* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 /* CIntFromPy.proto */
@@ -1113,11 +1119,15 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
 /* Module declarations from 'ultrasonic' */
 __PYX_EXTERN_C DL_IMPORT(void) initUltrasonic(void); /*proto*/
+__PYX_EXTERN_C DL_IMPORT(void) initTimer(void); /*proto*/
 __PYX_EXTERN_C DL_IMPORT(void) freeUltrasonic(void); /*proto*/
+__PYX_EXTERN_C DL_IMPORT(void) freeTimer(void); /*proto*/
 __PYX_EXTERN_C DL_IMPORT(void) txHigh(void); /*proto*/
 __PYX_EXTERN_C DL_IMPORT(void) txLow(void); /*proto*/
-__PYX_EXTERN_C DL_IMPORT(void) checkRxLevel(void); /*proto*/
+__PYX_EXTERN_C DL_IMPORT(int) getTxLevel(void); /*proto*/
+__PYX_EXTERN_C DL_IMPORT(int) checkRxLevel(void); /*proto*/
 __PYX_EXTERN_C DL_IMPORT(void) clearTxRx(void); /*proto*/
+__PYX_EXTERN_C DL_IMPORT(unsigned PY_LONG_LONG) getSystemTimerCounter(void); /*proto*/
 #define __Pyx_MODULE_NAME "ultrasonic"
 extern int __pyx_module_is_main_ultrasonic;
 int __pyx_module_is_main_ultrasonic = 0;
@@ -1137,6 +1147,7 @@ static const char __pyx_k_prepare[] = "__prepare__";
 static const char __pyx_k_qualname[] = "__qualname__";
 static const char __pyx_k_metaclass[] = "__metaclass__";
 static const char __pyx_k_Ultrasonic[] = "Ultrasonic";
+static const char __pyx_k_getTxLevel[] = "getTxLevel";
 static const char __pyx_k_ultrasonic[] = "ultrasonic";
 static const char __pyx_k_checkRxLevel[] = "checkRxLevel";
 static const char __pyx_k_Ultrasonic___del[] = "Ultrasonic.__del__";
@@ -1144,18 +1155,25 @@ static const char __pyx_k_Ultrasonic_txLow[] = "Ultrasonic.txLow";
 static const char __pyx_k_Ultrasonic___init[] = "Ultrasonic.__init__";
 static const char __pyx_k_Ultrasonic_txHigh[] = "Ultrasonic.txHigh";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static const char __pyx_k_Ultrasonic_getTxLevel[] = "Ultrasonic.getTxLevel";
+static const char __pyx_k_getSystemTimerCounter[] = "getSystemTimerCounter";
 static const char __pyx_k_ultrasonic_wrapper_pyx[] = "ultrasonic-wrapper.pyx";
 static const char __pyx_k_Ultrasonic_checkRxLevel[] = "Ultrasonic.checkRxLevel";
+static const char __pyx_k_Ultrasonic_getSystemTimerCounter[] = "Ultrasonic.getSystemTimerCounter";
 static PyObject *__pyx_n_s_Ultrasonic;
 static PyObject *__pyx_n_s_Ultrasonic___del;
 static PyObject *__pyx_n_s_Ultrasonic___init;
 static PyObject *__pyx_n_s_Ultrasonic_checkRxLevel;
+static PyObject *__pyx_n_s_Ultrasonic_getSystemTimerCounter;
+static PyObject *__pyx_n_s_Ultrasonic_getTxLevel;
 static PyObject *__pyx_n_s_Ultrasonic_txHigh;
 static PyObject *__pyx_n_s_Ultrasonic_txLow;
 static PyObject *__pyx_n_s_checkRxLevel;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_del;
 static PyObject *__pyx_n_s_doc;
+static PyObject *__pyx_n_s_getSystemTimerCounter;
+static PyObject *__pyx_n_s_getTxLevel;
 static PyObject *__pyx_n_s_init;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_metaclass;
@@ -1173,25 +1191,31 @@ static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic___init__(CYTHON_UNUSED PyObj
 static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_2__del__(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_4txHigh(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_6txLow(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_8checkRxLevel(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_8getTxLevel(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_10checkRxLevel(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_12getSystemTimerCounter(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self); /* proto */
 static PyObject *__pyx_tuple_;
 static PyObject *__pyx_tuple__3;
 static PyObject *__pyx_tuple__5;
 static PyObject *__pyx_tuple__7;
 static PyObject *__pyx_tuple__9;
+static PyObject *__pyx_tuple__11;
+static PyObject *__pyx_tuple__13;
 static PyObject *__pyx_codeobj__2;
 static PyObject *__pyx_codeobj__4;
 static PyObject *__pyx_codeobj__6;
 static PyObject *__pyx_codeobj__8;
 static PyObject *__pyx_codeobj__10;
+static PyObject *__pyx_codeobj__12;
+static PyObject *__pyx_codeobj__14;
 /* Late includes */
 
-/* "ultrasonic-wrapper.pyx":10
+/* "ultrasonic-wrapper.pyx":14
  * #TODO: Double check
  * class Ultrasonic:
  *     def __init__ (self):             # <<<<<<<<<<<<<<
  *         initUltrasonic()
- * 
+ *         initTimer()
  */
 
 /* Python wrapper */
@@ -1213,21 +1237,30 @@ static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic___init__(CYTHON_UNUSED PyObj
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__init__", 0);
 
-  /* "ultrasonic-wrapper.pyx":11
+  /* "ultrasonic-wrapper.pyx":15
  * class Ultrasonic:
  *     def __init__ (self):
  *         initUltrasonic()             # <<<<<<<<<<<<<<
+ *         initTimer()
  * 
- *     def __del__(self):
  */
   initUltrasonic();
 
-  /* "ultrasonic-wrapper.pyx":10
+  /* "ultrasonic-wrapper.pyx":16
+ *     def __init__ (self):
+ *         initUltrasonic()
+ *         initTimer()             # <<<<<<<<<<<<<<
+ * 
+ *     def __del__(self):
+ */
+  initTimer();
+
+  /* "ultrasonic-wrapper.pyx":14
  * #TODO: Double check
  * class Ultrasonic:
  *     def __init__ (self):             # <<<<<<<<<<<<<<
  *         initUltrasonic()
- * 
+ *         initTimer()
  */
 
   /* function exit code */
@@ -1237,8 +1270,8 @@ static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic___init__(CYTHON_UNUSED PyObj
   return __pyx_r;
 }
 
-/* "ultrasonic-wrapper.pyx":13
- *         initUltrasonic()
+/* "ultrasonic-wrapper.pyx":18
+ *         initTimer()
  * 
  *     def __del__(self):             # <<<<<<<<<<<<<<
  *         clearTxRx()
@@ -1264,26 +1297,35 @@ static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_2__del__(CYTHON_UNUSED PyObj
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__del__", 0);
 
-  /* "ultrasonic-wrapper.pyx":14
+  /* "ultrasonic-wrapper.pyx":19
  * 
  *     def __del__(self):
  *         clearTxRx()             # <<<<<<<<<<<<<<
  *         freeUltrasonic()
- * 
+ *         freeTimer()
  */
   clearTxRx();
 
-  /* "ultrasonic-wrapper.pyx":15
+  /* "ultrasonic-wrapper.pyx":20
  *     def __del__(self):
  *         clearTxRx()
  *         freeUltrasonic()             # <<<<<<<<<<<<<<
+ *         freeTimer()
  * 
- *     def txHigh(self):
  */
   freeUltrasonic();
 
-  /* "ultrasonic-wrapper.pyx":13
- *         initUltrasonic()
+  /* "ultrasonic-wrapper.pyx":21
+ *         clearTxRx()
+ *         freeUltrasonic()
+ *         freeTimer()             # <<<<<<<<<<<<<<
+ * 
+ *     def txHigh(self):
+ */
+  freeTimer();
+
+  /* "ultrasonic-wrapper.pyx":18
+ *         initTimer()
  * 
  *     def __del__(self):             # <<<<<<<<<<<<<<
  *         clearTxRx()
@@ -1297,8 +1339,8 @@ static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_2__del__(CYTHON_UNUSED PyObj
   return __pyx_r;
 }
 
-/* "ultrasonic-wrapper.pyx":17
- *         freeUltrasonic()
+/* "ultrasonic-wrapper.pyx":23
+ *         freeTimer()
  * 
  *     def txHigh(self):             # <<<<<<<<<<<<<<
  *         return txHigh()
@@ -1328,7 +1370,7 @@ static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_4txHigh(CYTHON_UNUSED PyObje
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("txHigh", 0);
 
-  /* "ultrasonic-wrapper.pyx":18
+  /* "ultrasonic-wrapper.pyx":24
  * 
  *     def txHigh(self):
  *         return txHigh()             # <<<<<<<<<<<<<<
@@ -1336,14 +1378,14 @@ static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_4txHigh(CYTHON_UNUSED PyObje
  *     def txLow(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_void_to_None(txHigh()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 18, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(txHigh()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "ultrasonic-wrapper.pyx":17
- *         freeUltrasonic()
+  /* "ultrasonic-wrapper.pyx":23
+ *         freeTimer()
  * 
  *     def txHigh(self):             # <<<<<<<<<<<<<<
  *         return txHigh()
@@ -1361,7 +1403,7 @@ static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_4txHigh(CYTHON_UNUSED PyObje
   return __pyx_r;
 }
 
-/* "ultrasonic-wrapper.pyx":20
+/* "ultrasonic-wrapper.pyx":26
  *         return txHigh()
  * 
  *     def txLow(self):             # <<<<<<<<<<<<<<
@@ -1392,21 +1434,21 @@ static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_6txLow(CYTHON_UNUSED PyObjec
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("txLow", 0);
 
-  /* "ultrasonic-wrapper.pyx":21
+  /* "ultrasonic-wrapper.pyx":27
  * 
  *     def txLow(self):
  *         return txLow()             # <<<<<<<<<<<<<<
  * 
- *     def checkRxLevel(self):
+ *     def getTxLevel(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_void_to_None(txLow()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 21, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_void_to_None(txLow()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "ultrasonic-wrapper.pyx":20
+  /* "ultrasonic-wrapper.pyx":26
  *         return txHigh()
  * 
  *     def txLow(self):             # <<<<<<<<<<<<<<
@@ -1425,28 +1467,93 @@ static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_6txLow(CYTHON_UNUSED PyObjec
   return __pyx_r;
 }
 
-/* "ultrasonic-wrapper.pyx":23
+/* "ultrasonic-wrapper.pyx":29
  *         return txLow()
  * 
- *     def checkRxLevel(self):             # <<<<<<<<<<<<<<
- *         return checkRxLevel()
+ *     def getTxLevel(self):             # <<<<<<<<<<<<<<
+ *         return getTxLevel()
+ * 
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_10ultrasonic_10Ultrasonic_9checkRxLevel(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
-static PyMethodDef __pyx_mdef_10ultrasonic_10Ultrasonic_9checkRxLevel = {"checkRxLevel", (PyCFunction)__pyx_pw_10ultrasonic_10Ultrasonic_9checkRxLevel, METH_O, 0};
-static PyObject *__pyx_pw_10ultrasonic_10Ultrasonic_9checkRxLevel(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+static PyObject *__pyx_pw_10ultrasonic_10Ultrasonic_9getTxLevel(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_10ultrasonic_10Ultrasonic_9getTxLevel = {"getTxLevel", (PyCFunction)__pyx_pw_10ultrasonic_10Ultrasonic_9getTxLevel, METH_O, 0};
+static PyObject *__pyx_pw_10ultrasonic_10Ultrasonic_9getTxLevel(PyObject *__pyx_self, PyObject *__pyx_v_self) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("checkRxLevel (wrapper)", 0);
-  __pyx_r = __pyx_pf_10ultrasonic_10Ultrasonic_8checkRxLevel(__pyx_self, ((PyObject *)__pyx_v_self));
+  __Pyx_RefNannySetupContext("getTxLevel (wrapper)", 0);
+  __pyx_r = __pyx_pf_10ultrasonic_10Ultrasonic_8getTxLevel(__pyx_self, ((PyObject *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_8checkRxLevel(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self) {
+static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_8getTxLevel(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("getTxLevel", 0);
+
+  /* "ultrasonic-wrapper.pyx":30
+ * 
+ *     def getTxLevel(self):
+ *         return getTxLevel()             # <<<<<<<<<<<<<<
+ * 
+ *     def checkRxLevel(self):
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_int(getTxLevel()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 30, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "ultrasonic-wrapper.pyx":29
+ *         return txLow()
+ * 
+ *     def getTxLevel(self):             # <<<<<<<<<<<<<<
+ *         return getTxLevel()
+ * 
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("ultrasonic.Ultrasonic.getTxLevel", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "ultrasonic-wrapper.pyx":32
+ *         return getTxLevel()
+ * 
+ *     def checkRxLevel(self):             # <<<<<<<<<<<<<<
+ *         return checkRxLevel()
+ * 
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10ultrasonic_10Ultrasonic_11checkRxLevel(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_10ultrasonic_10Ultrasonic_11checkRxLevel = {"checkRxLevel", (PyCFunction)__pyx_pw_10ultrasonic_10Ultrasonic_11checkRxLevel, METH_O, 0};
+static PyObject *__pyx_pw_10ultrasonic_10Ultrasonic_11checkRxLevel(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("checkRxLevel (wrapper)", 0);
+  __pyx_r = __pyx_pf_10ultrasonic_10Ultrasonic_10checkRxLevel(__pyx_self, ((PyObject *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_10checkRxLevel(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -1455,29 +1562,92 @@ static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_8checkRxLevel(CYTHON_UNUSED 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("checkRxLevel", 0);
 
-  /* "ultrasonic-wrapper.pyx":24
+  /* "ultrasonic-wrapper.pyx":33
  * 
  *     def checkRxLevel(self):
  *         return checkRxLevel()             # <<<<<<<<<<<<<<
+ * 
+ *     def getSystemTimerCounter(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_void_to_None(checkRxLevel()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 24, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(checkRxLevel()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 33, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "ultrasonic-wrapper.pyx":23
- *         return txLow()
+  /* "ultrasonic-wrapper.pyx":32
+ *         return getTxLevel()
  * 
  *     def checkRxLevel(self):             # <<<<<<<<<<<<<<
  *         return checkRxLevel()
+ * 
  */
 
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_AddTraceback("ultrasonic.Ultrasonic.checkRxLevel", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "ultrasonic-wrapper.pyx":35
+ *         return checkRxLevel()
+ * 
+ *     def getSystemTimerCounter(self):             # <<<<<<<<<<<<<<
+ *         return getSystemTimerCounter()
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_10ultrasonic_10Ultrasonic_13getSystemTimerCounter(PyObject *__pyx_self, PyObject *__pyx_v_self); /*proto*/
+static PyMethodDef __pyx_mdef_10ultrasonic_10Ultrasonic_13getSystemTimerCounter = {"getSystemTimerCounter", (PyCFunction)__pyx_pw_10ultrasonic_10Ultrasonic_13getSystemTimerCounter, METH_O, 0};
+static PyObject *__pyx_pw_10ultrasonic_10Ultrasonic_13getSystemTimerCounter(PyObject *__pyx_self, PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("getSystemTimerCounter (wrapper)", 0);
+  __pyx_r = __pyx_pf_10ultrasonic_10Ultrasonic_12getSystemTimerCounter(__pyx_self, ((PyObject *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_10ultrasonic_10Ultrasonic_12getSystemTimerCounter(CYTHON_UNUSED PyObject *__pyx_self, CYTHON_UNUSED PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("getSystemTimerCounter", 0);
+
+  /* "ultrasonic-wrapper.pyx":36
+ * 
+ *     def getSystemTimerCounter(self):
+ *         return getSystemTimerCounter()             # <<<<<<<<<<<<<<
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_unsigned_PY_LONG_LONG(getSystemTimerCounter()); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 36, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "ultrasonic-wrapper.pyx":35
+ *         return checkRxLevel()
+ * 
+ *     def getSystemTimerCounter(self):             # <<<<<<<<<<<<<<
+ *         return getSystemTimerCounter()
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("ultrasonic.Ultrasonic.getSystemTimerCounter", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1535,12 +1705,16 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_Ultrasonic___del, __pyx_k_Ultrasonic___del, sizeof(__pyx_k_Ultrasonic___del), 0, 0, 1, 1},
   {&__pyx_n_s_Ultrasonic___init, __pyx_k_Ultrasonic___init, sizeof(__pyx_k_Ultrasonic___init), 0, 0, 1, 1},
   {&__pyx_n_s_Ultrasonic_checkRxLevel, __pyx_k_Ultrasonic_checkRxLevel, sizeof(__pyx_k_Ultrasonic_checkRxLevel), 0, 0, 1, 1},
+  {&__pyx_n_s_Ultrasonic_getSystemTimerCounter, __pyx_k_Ultrasonic_getSystemTimerCounter, sizeof(__pyx_k_Ultrasonic_getSystemTimerCounter), 0, 0, 1, 1},
+  {&__pyx_n_s_Ultrasonic_getTxLevel, __pyx_k_Ultrasonic_getTxLevel, sizeof(__pyx_k_Ultrasonic_getTxLevel), 0, 0, 1, 1},
   {&__pyx_n_s_Ultrasonic_txHigh, __pyx_k_Ultrasonic_txHigh, sizeof(__pyx_k_Ultrasonic_txHigh), 0, 0, 1, 1},
   {&__pyx_n_s_Ultrasonic_txLow, __pyx_k_Ultrasonic_txLow, sizeof(__pyx_k_Ultrasonic_txLow), 0, 0, 1, 1},
   {&__pyx_n_s_checkRxLevel, __pyx_k_checkRxLevel, sizeof(__pyx_k_checkRxLevel), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_del, __pyx_k_del, sizeof(__pyx_k_del), 0, 0, 1, 1},
   {&__pyx_n_s_doc, __pyx_k_doc, sizeof(__pyx_k_doc), 0, 0, 1, 1},
+  {&__pyx_n_s_getSystemTimerCounter, __pyx_k_getSystemTimerCounter, sizeof(__pyx_k_getSystemTimerCounter), 0, 0, 1, 1},
+  {&__pyx_n_s_getTxLevel, __pyx_k_getTxLevel, sizeof(__pyx_k_getTxLevel), 0, 0, 1, 1},
   {&__pyx_n_s_init, __pyx_k_init, sizeof(__pyx_k_init), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_metaclass, __pyx_k_metaclass, sizeof(__pyx_k_metaclass), 0, 0, 1, 1},
@@ -1564,64 +1738,88 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "ultrasonic-wrapper.pyx":10
+  /* "ultrasonic-wrapper.pyx":14
  * #TODO: Double check
  * class Ultrasonic:
  *     def __init__ (self):             # <<<<<<<<<<<<<<
  *         initUltrasonic()
- * 
+ *         initTimer()
  */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple_)) __PYX_ERR(0, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
-  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_init, 10, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __pyx_codeobj__2 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple_, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_init, 14, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__2)) __PYX_ERR(0, 14, __pyx_L1_error)
 
-  /* "ultrasonic-wrapper.pyx":13
- *         initUltrasonic()
+  /* "ultrasonic-wrapper.pyx":18
+ *         initTimer()
  * 
  *     def __del__(self):             # <<<<<<<<<<<<<<
  *         clearTxRx()
  *         freeUltrasonic()
  */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_del, 13, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_del, 18, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 18, __pyx_L1_error)
 
-  /* "ultrasonic-wrapper.pyx":17
- *         freeUltrasonic()
+  /* "ultrasonic-wrapper.pyx":23
+ *         freeTimer()
  * 
  *     def txHigh(self):             # <<<<<<<<<<<<<<
  *         return txHigh()
  * 
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__5);
   __Pyx_GIVEREF(__pyx_tuple__5);
-  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_txHigh, 17, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_codeobj__6 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__5, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_txHigh, 23, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__6)) __PYX_ERR(0, 23, __pyx_L1_error)
 
-  /* "ultrasonic-wrapper.pyx":20
+  /* "ultrasonic-wrapper.pyx":26
  *         return txHigh()
  * 
  *     def txLow(self):             # <<<<<<<<<<<<<<
  *         return txLow()
  * 
  */
-  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_txLow, 20, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_txLow, 26, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 26, __pyx_L1_error)
 
-  /* "ultrasonic-wrapper.pyx":23
+  /* "ultrasonic-wrapper.pyx":29
  *         return txLow()
+ * 
+ *     def getTxLevel(self):             # <<<<<<<<<<<<<<
+ *         return getTxLevel()
+ * 
+ */
+  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__9);
+  __Pyx_GIVEREF(__pyx_tuple__9);
+  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_getTxLevel, 29, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 29, __pyx_L1_error)
+
+  /* "ultrasonic-wrapper.pyx":32
+ *         return getTxLevel()
  * 
  *     def checkRxLevel(self):             # <<<<<<<<<<<<<<
  *         return checkRxLevel()
+ * 
  */
-  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(0, 23, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__9);
-  __Pyx_GIVEREF(__pyx_tuple__9);
-  __pyx_codeobj__10 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__9, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_checkRxLevel, 23, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__10)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(0, 32, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__11);
+  __Pyx_GIVEREF(__pyx_tuple__11);
+  __pyx_codeobj__12 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__11, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_checkRxLevel, 32, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__12)) __PYX_ERR(0, 32, __pyx_L1_error)
+
+  /* "ultrasonic-wrapper.pyx":35
+ *         return checkRxLevel()
+ * 
+ *     def getSystemTimerCounter(self):             # <<<<<<<<<<<<<<
+ *         return getSystemTimerCounter()
+ */
+  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_n_s_self); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__13);
+  __Pyx_GIVEREF(__pyx_tuple__13);
+  __pyx_codeobj__14 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__13, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_ultrasonic_wrapper_pyx, __pyx_n_s_getSystemTimerCounter, 35, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__14)) __PYX_ERR(0, 35, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -1903,92 +2101,116 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "ultrasonic-wrapper.pyx":9
+  /* "ultrasonic-wrapper.pyx":13
  * 
  * #TODO: Double check
  * class Ultrasonic:             # <<<<<<<<<<<<<<
  *     def __init__ (self):
  *         initUltrasonic()
  */
-  __pyx_t_1 = __Pyx_Py3MetaclassPrepare((PyObject *) NULL, __pyx_empty_tuple, __pyx_n_s_Ultrasonic, __pyx_n_s_Ultrasonic, (PyObject *) NULL, __pyx_n_s_ultrasonic, (PyObject *) NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_Py3MetaclassPrepare((PyObject *) NULL, __pyx_empty_tuple, __pyx_n_s_Ultrasonic, __pyx_n_s_Ultrasonic, (PyObject *) NULL, __pyx_n_s_ultrasonic, (PyObject *) NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 13, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
 
-  /* "ultrasonic-wrapper.pyx":10
+  /* "ultrasonic-wrapper.pyx":14
  * #TODO: Double check
  * class Ultrasonic:
  *     def __init__ (self):             # <<<<<<<<<<<<<<
  *         initUltrasonic()
- * 
+ *         initTimer()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_1__init__, 0, __pyx_n_s_Ultrasonic___init, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__2)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 10, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_1__init__, 0, __pyx_n_s_Ultrasonic___init, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__2)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 14, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_init, __pyx_t_2) < 0) __PYX_ERR(0, 10, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_init, __pyx_t_2) < 0) __PYX_ERR(0, 14, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "ultrasonic-wrapper.pyx":13
- *         initUltrasonic()
+  /* "ultrasonic-wrapper.pyx":18
+ *         initTimer()
  * 
  *     def __del__(self):             # <<<<<<<<<<<<<<
  *         clearTxRx()
  *         freeUltrasonic()
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_3__del__, 0, __pyx_n_s_Ultrasonic___del, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 13, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_3__del__, 0, __pyx_n_s_Ultrasonic___del, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_del, __pyx_t_2) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_del, __pyx_t_2) < 0) __PYX_ERR(0, 18, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "ultrasonic-wrapper.pyx":17
- *         freeUltrasonic()
+  /* "ultrasonic-wrapper.pyx":23
+ *         freeTimer()
  * 
  *     def txHigh(self):             # <<<<<<<<<<<<<<
  *         return txHigh()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_5txHigh, 0, __pyx_n_s_Ultrasonic_txHigh, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 17, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_5txHigh, 0, __pyx_n_s_Ultrasonic_txHigh, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__6)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_txHigh, __pyx_t_2) < 0) __PYX_ERR(0, 17, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_txHigh, __pyx_t_2) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "ultrasonic-wrapper.pyx":20
+  /* "ultrasonic-wrapper.pyx":26
  *         return txHigh()
  * 
  *     def txLow(self):             # <<<<<<<<<<<<<<
  *         return txLow()
  * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_7txLow, 0, __pyx_n_s_Ultrasonic_txLow, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 20, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_7txLow, 0, __pyx_n_s_Ultrasonic_txLow, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__8)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_txLow, __pyx_t_2) < 0) __PYX_ERR(0, 20, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_txLow, __pyx_t_2) < 0) __PYX_ERR(0, 26, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "ultrasonic-wrapper.pyx":23
+  /* "ultrasonic-wrapper.pyx":29
  *         return txLow()
+ * 
+ *     def getTxLevel(self):             # <<<<<<<<<<<<<<
+ *         return getTxLevel()
+ * 
+ */
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_9getTxLevel, 0, __pyx_n_s_Ultrasonic_getTxLevel, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_getTxLevel, __pyx_t_2) < 0) __PYX_ERR(0, 29, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "ultrasonic-wrapper.pyx":32
+ *         return getTxLevel()
  * 
  *     def checkRxLevel(self):             # <<<<<<<<<<<<<<
  *         return checkRxLevel()
+ * 
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_9checkRxLevel, 0, __pyx_n_s_Ultrasonic_checkRxLevel, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__10)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 23, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_11checkRxLevel, 0, __pyx_n_s_Ultrasonic_checkRxLevel, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__12)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 32, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_checkRxLevel, __pyx_t_2) < 0) __PYX_ERR(0, 23, __pyx_L1_error)
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_checkRxLevel, __pyx_t_2) < 0) __PYX_ERR(0, 32, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "ultrasonic-wrapper.pyx":9
+  /* "ultrasonic-wrapper.pyx":35
+ *         return checkRxLevel()
+ * 
+ *     def getSystemTimerCounter(self):             # <<<<<<<<<<<<<<
+ *         return getSystemTimerCounter()
+ */
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_10ultrasonic_10Ultrasonic_13getSystemTimerCounter, 0, __pyx_n_s_Ultrasonic_getSystemTimerCounter, NULL, __pyx_n_s_ultrasonic, __pyx_d, ((PyObject *)__pyx_codeobj__14)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (__Pyx_SetNameInClass(__pyx_t_1, __pyx_n_s_getSystemTimerCounter, __pyx_t_2) < 0) __PYX_ERR(0, 35, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "ultrasonic-wrapper.pyx":13
  * 
  * #TODO: Double check
  * class Ultrasonic:             # <<<<<<<<<<<<<<
  *     def __init__ (self):
  *         initUltrasonic()
  */
-  __pyx_t_2 = __Pyx_Py3ClassCreate(((PyObject*)&__Pyx_DefaultClassType), __pyx_n_s_Ultrasonic, __pyx_empty_tuple, __pyx_t_1, NULL, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 9, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_Py3ClassCreate(((PyObject*)&__Pyx_DefaultClassType), __pyx_n_s_Ultrasonic, __pyx_empty_tuple, __pyx_t_1, NULL, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 13, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_Ultrasonic, __pyx_t_2) < 0) __PYX_ERR(0, 9, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_Ultrasonic, __pyx_t_2) < 0) __PYX_ERR(0, 13, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "ultrasonic-wrapper.pyx":1
  * cdef extern void initUltrasonic()             # <<<<<<<<<<<<<<
+ * cdef extern void initTimer()
  * cdef extern void freeUltrasonic()
- * cdef extern void txHigh()
  */
   __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -3069,6 +3291,68 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 bad:
     Py_XDECREF(py_code);
     Py_XDECREF(py_frame);
+}
+
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+    const int neg_one = (int) ((int) 0 - (int) 1), const_zero = (int) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(int),
+                                     little, !is_unsigned);
+    }
+}
+
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_unsigned_PY_LONG_LONG(unsigned PY_LONG_LONG value) {
+    const unsigned PY_LONG_LONG neg_one = (unsigned PY_LONG_LONG) ((unsigned PY_LONG_LONG) 0 - (unsigned PY_LONG_LONG) 1), const_zero = (unsigned PY_LONG_LONG) 0;
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(unsigned PY_LONG_LONG) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(unsigned PY_LONG_LONG) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(unsigned PY_LONG_LONG) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(unsigned PY_LONG_LONG) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(unsigned PY_LONG_LONG) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(unsigned PY_LONG_LONG),
+                                     little, !is_unsigned);
+    }
 }
 
 /* CIntToPy */
