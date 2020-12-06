@@ -12,6 +12,7 @@
 #define BLOCK_SIZE 4096
 
 #define GPIO_OFFSET 0x200000
+#define TIMER_OFFSET 0x00003000
 
 // GPIO Pin 9, 10 from explorer hat schematic
 #define TX_MISO  9
@@ -24,9 +25,16 @@
 #define GPLEV0 10
 #define GPIO_PUP_PDN_CNTRL_REG0 57
 
+#define CLO 1
+#define CHI 2
+
 volatile unsigned int *gpio;
 void *gpioMap;
 int fdGPIO;
+
+volatile unsigned int *timer;
+void *timerMap;
+int fdTimer;
 
 //memory map initalization
 void initUltrasonic() {
@@ -42,6 +50,8 @@ void initUltrasonic() {
         peripheralBase + GPIO_OFFSET
     );
     
+    //do a timeMap = ? 
+
     if ( gpioMap == MAP_FAILED ) {
         fprintf( stderr, "The memory map initialization failed.\n");
         perror( "mmap" );
@@ -75,10 +85,37 @@ void initUltrasonic() {
     gpio[GPCLR0] = 1 << RX_MOSI;
 }
 
+//timer initialization
+void initTimer() {
+    unsigned peripheralBase = bcm_host_get_peripheral_address();
+    fprintf( stderr, "%08x %08x\n", peripheralBase, peripheralBase + TIMER_OFFSET );
+    fdTimer = open("/dev/mem", O_RDWR|O_SYNC);
+    timerMap = (unsigned int *)mmap(
+        NULL,
+        BLOCK_SIZE,
+        PROT_READ|PROT_WRITE,
+        MAP_SHARED,
+        fdTimer,
+        peripheralBase + TIMER_OFFSET
+    );
+    if ( timerMap == MAP_FAILED ) {
+        perror( "mmap" );
+        return;
+    }
+    timer = (volatile unsigned int *) timerMap;
+    fprintf( stderr, "mmap successful: %p\n", timer );
+}
+
 void freeUltrasonic() {
     munmap( gpioMap, BLOCK_SIZE );
     close( fdGPIO );
 }
+
+void freeTimer() {
+    munmap( timerMap, BLOCK_SIZE );
+    close( fdTimer );
+}
+
 
 //calculate distance and time things in python
 void txHigh() {
@@ -106,4 +143,22 @@ int checkRxLevel() {
 void clearTxRx() {
     gpio[GPCLR0] = 1 << TX_MISO;
     gpio[GPCLR0] = 1 << RX_MOSI;
+}
+
+//timer from timer.c file example given in class
+unsigned long long getSystemTimerCounter() {
+    unsigned int h=-1, l;
+    
+    // we must read MMIO area as two separate 32 bit reads
+    h = timer[CHI];
+    l = timer[CLO];
+
+    // we have to repeat it if high word changed during read
+    //   - low low counter rolled over
+    if ( h != timer[CHI] ) {
+        h = timer[CHI];
+        l = timer[CLO];
+     }
+    // compose long long int value
+    return ((unsigned long long) h << 32) | (unsigned long long)l;
 }

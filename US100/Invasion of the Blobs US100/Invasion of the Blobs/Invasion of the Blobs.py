@@ -6,7 +6,7 @@
 
 import pygame, os, random
 from pygame.locals import *
-import ultrasonic #FIXME: import error. Might need to move the files in to the folder or change the file name?
+import ultrasonic
 import time
 
 u = ultrasonic.Ultrasonic()
@@ -16,6 +16,7 @@ def pulseTx(u):
     time.sleep(0.0001) #wait 100us
     u.txLow()
 
+#FIXME: need to use system timer
 def calculateDistance(u):
     # Wait for Rx pin to go high
     while (u.checkRxLevel() == 0):
