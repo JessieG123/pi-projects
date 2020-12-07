@@ -20,9 +20,9 @@
 
 #define GPFSEL0 0
 #define GPFSEL1 1
-#define GPSET0 6 //TODO: Find out why. In Lights example it was 7 and 10 in the old manual
-#define GPCLR0 8
-#define GPLEV0 10
+#define GPSET0 7 //TODO: Find out why. In Lights example it was 7 and 10 in the old manual. New manual 6 and 8? 
+#define GPCLR0 10
+#define GPLEV0 13 //10 in new 13 in old? 
 #define GPIO_PUP_PDN_CNTRL_REG0 57
 
 #define CS      0
@@ -79,13 +79,19 @@ void initUltrasonic() {
     r &= ~(0b111);
     gpio[GPFSEL1] = r;
 
+    //test LED
+    //~ r = gpio[GPFSEL0];
+	//~ r &= ~(0x7 << 12);
+	//~ r |= (0x1 << 12);
+	//~ gpio[GPFSEL0] = r;
+	//~ gpio[GPPUD] = 0x0;
         
 	//disable pull-up pull-down
     gpio[GPIO_PUP_PDN_CNTRL_REG0] &= ~(0b00 << (2 * TX_MISO)); //no resistor for pin 9 TX_MISO
     gpio[GPIO_PUP_PDN_CNTRL_REG0] &= ~(0b00 << (2 * RX_MOSI)); //no resistor for pin 10 RX_MOSI
     
     
-    // clearing the input line
+    // clearing the outputline
     gpio[GPCLR0] = 1 << TX_MISO;
     
     //TODO: check if needed
@@ -143,7 +149,7 @@ unsigned int getTxLevel() {
 }
 
 unsigned int checkRxLevel() {
-    unsigned int level = (gpio[GPLEV0] >> TX_MISO) & 1;
+    unsigned int level = (gpio[GPLEV0] >> RX_MOSI) & 1;
     
     return level;
 }
@@ -173,3 +179,14 @@ unsigned long long getSystemTimerCounter() {
     return ((unsigned long long) h << 32) | (unsigned long long)l;
     
 }
+
+
+//test LED lights
+
+//~ void LED1on() {
+    //~ gpio[GPSET0] = 1 << 4;
+//~ }
+
+//~ void LED1off() {
+    //~ gpio[GPCLR0] = 1 << 4;
+//~ }

@@ -26,29 +26,23 @@ def calculateDistance(u):
     print("rx level 1: " + str(u.checkRxLevel()))
     
     while (u.checkRxLevel() == 0):
-        #time.sleep(0.000001)
-        pass
+        time.sleep(0.000001)
     t1 = u.getSystemTimerCounter() / 1000000
     print("t1: " + str(t1) + "\n")
     
     print("rx level 2: " + str(u.checkRxLevel()))
     while (u.checkRxLevel() == 1):
-        #time.sleep(0.000001)
-        pass
+        time.sleep(0.000001)
     t2 = u.getSystemTimerCounter() /1000000
     print("t2: " + str(t2) + "\n")
     timePeriod = (t2 - t1) #seconds
     
     print("timePeriod: " + str(timePeriod))
     
-    distance = 0.5 * timePeriod * 343
+    distance = 0.5 * timePeriod * 34300
     print("distance: " + str(distance))
-    
+
     return distance
-    # Record the time t1
-    # Wait for Rx pin to go low
-    # Record time t2
-    # distance = 1/2(t2 - t1) * 343m/s
 
 
 random.seed()
@@ -99,19 +93,10 @@ class Ship(pygame.sprite.Sprite):
     def update(self):
         key = pygame.key.get_pressed()
         #TODO: modify this part
-        #FIXME: distance is very very small all the time
         pulseTx(u)
 
-        #print("BEFORE txHigh")
-        #u.txHigh()
-        #print("BEFORE timesleep")
-        #time.sleep(0.0001) #wait 100us
-        #print("BEFORE txLow")
-        #u.txLow()
-        
         distance = calculateDistance(u)
-        #print(distance)
-        
+     
         
         if key[K_LEFT]:
             self.rect.move_ip(-5, 0)
@@ -628,6 +613,7 @@ class Game:
 def run():
     pygame.init()
     game = Game()
+    #pulseTx(u)
     game.menuLoop()
 
 
