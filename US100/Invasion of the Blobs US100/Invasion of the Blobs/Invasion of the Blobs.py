@@ -96,12 +96,14 @@ class Ship(pygame.sprite.Sprite):
         pulseTx(u)
 
         distance = calculateDistance(u)
-     
-        
-        if key[K_LEFT]:
-            self.rect.move_ip(-5, 0)
-        if key[K_RIGHT]:
-            self.rect.move_ip(5, 0)
+        if distance > 10:
+            self.rect.move_ip(distance, 0)
+        if distance < 10:
+            self.rect.move_ip(-distance, 0)
+        # ~ if key[K_LEFT]:
+            # ~ self.rect.move_ip(-5, 0)
+        # ~ if key[K_RIGHT]:
+            # ~ self.rect.move_ip(5, 0)
 
         self.reload_timer += 1
         if key[K_SPACE] and not self.overheated:

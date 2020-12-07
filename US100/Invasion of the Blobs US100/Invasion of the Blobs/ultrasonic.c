@@ -20,9 +20,9 @@
 
 #define GPFSEL0 0
 #define GPFSEL1 1
-#define GPSET0 7 //TODO: Find out why. In Lights example it was 7 and 10 in the old manual. New manual 6 and 8? 
+#define GPSET0 7 // because 0x1c = 26 and 28/4 = 7
 #define GPCLR0 10
-#define GPLEV0 13 //10 in new 13 in old? 
+#define GPLEV0 13 
 #define GPIO_PUP_PDN_CNTRL_REG0 57
 
 #define CS      0
