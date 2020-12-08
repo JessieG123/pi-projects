@@ -6,8 +6,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <bcm_host.h>
-#include <time.h> //TODO: is this suppose to be here
-
+#include <time.h> 
 
 #define BLOCK_SIZE 4096
 
@@ -25,13 +24,13 @@
 #define GPLEV0 13 
 #define GPIO_PUP_PDN_CNTRL_REG0 57
 
-#define CS      0
-#define CLO     1
-#define CHI     2
-#define C0      3
-#define C1      4
-#define C2      5
-#define C3      6
+#define CS 0
+#define CLO 1
+#define CHI 2
+#define C0 3
+#define C1 4
+#define C2 5
+#define C3 6
 
 volatile unsigned int *gpio;
 void *gpioMap;
@@ -79,13 +78,6 @@ void initUltrasonic() {
     r &= ~(0b111);
     gpio[GPFSEL1] = r;
 
-    //test LED
-    //~ r = gpio[GPFSEL0];
-	//~ r &= ~(0x7 << 12);
-	//~ r |= (0x1 << 12);
-	//~ gpio[GPFSEL0] = r;
-	//~ gpio[GPPUD] = 0x0;
-        
 	//disable pull-up pull-down
     gpio[GPIO_PUP_PDN_CNTRL_REG0] &= ~(0b00 << (2 * TX_MISO)); //no resistor for pin 9 TX_MISO
     gpio[GPIO_PUP_PDN_CNTRL_REG0] &= ~(0b00 << (2 * RX_MOSI)); //no resistor for pin 10 RX_MOSI
@@ -93,13 +85,9 @@ void initUltrasonic() {
     
     // clearing the outputline
     gpio[GPCLR0] = 1 << TX_MISO;
-    
-    //TODO: check if needed
-    //gpio[GPSET0] = 1 << TX_MISO;
-    //gpio[GPCLR0] = 1 << RX_MOSI;
 }
 
-//timer initialization
+//timer initialization from the timer.c example in lecture notes
 void initTimer() {
     unsigned peripheralBase = bcm_host_get_peripheral_address();
     fprintf( stderr, "%08x %08x\n", peripheralBase, peripheralBase + TIMER_OFFSET );
@@ -131,29 +119,31 @@ void freeTimer() {
 }
 
 
-//calculate distance and time things in python
+//set Tx pin to high
 void txHigh() {
     gpio[GPSET0] = 1 << TX_MISO;
 
 }
 
+//set Tx pin to low
 void txLow() {
     gpio[GPCLR0] = 1 << TX_MISO;
 
 }
-
+//checking tx level
 unsigned int getTxLevel() {
     unsigned int level = (gpio[GPLEV0] >> TX_MISO) & 1;
     
     return level;
 }
-
+//checking rx level
 unsigned int checkRxLevel() {
     unsigned int level = (gpio[GPLEV0] >> RX_MOSI) & 1;
     
     return level;
 }
 
+//clear both 
 void clearTxRx() {
     gpio[GPCLR0] = 1 << TX_MISO;
     gpio[GPCLR0] = 1 << RX_MOSI;
@@ -179,14 +169,3 @@ unsigned long long getSystemTimerCounter() {
     return ((unsigned long long) h << 32) | (unsigned long long)l;
     
 }
-
-
-//test LED lights
-
-//~ void LED1on() {
-    //~ gpio[GPSET0] = 1 << 4;
-//~ }
-
-//~ void LED1off() {
-    //~ gpio[GPCLR0] = 1 << 4;
-//~ }

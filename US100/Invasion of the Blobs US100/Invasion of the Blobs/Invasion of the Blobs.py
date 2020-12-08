@@ -11,31 +11,29 @@ import time
 
 u = ultrasonic.Ultrasonic()
 
+#pluse tx pin 
 def pulseTx(u):
     print("BEFRE txHigh:" + str(u.getTxLevel()))
     u.txHigh()
-    print("AFTER txHigh:" + str(u.getTxLevel()))
     time.sleep(0.0001) #wait 100us
-    print("BEFRE txLow:" + str(u.getTxLevel()))
+    print("BEFORE txLow:" + str(u.getTxLevel()))
     u.txLow()
-    print("AFTER tcLow:" + str(u.getTxLevel()))
 
-#FIXME: need to use system timer
+#calculate distance
+#wait for rx level to go high then low
+#get time when high and low then get difference
 def calculateDistance(u):
-    # Wait for Rx pin to go high
     print("rx level 1: " + str(u.checkRxLevel()))
     
     while (u.checkRxLevel() == 0):
         time.sleep(0.000001)
     t1 = u.getSystemTimerCounter() / 1000000
-    print("t1: " + str(t1) + "\n")
     
     print("rx level 2: " + str(u.checkRxLevel()))
     while (u.checkRxLevel() == 1):
         time.sleep(0.000001)
     t2 = u.getSystemTimerCounter() /1000000
-    print("t2: " + str(t2) + "\n")
-    timePeriod = (t2 - t1) #seconds
+    timePeriod = (t2 - t1) 
     
     print("timePeriod: " + str(timePeriod))
     
@@ -92,12 +90,13 @@ class Ship(pygame.sprite.Sprite):
 
     def update(self):
         key = pygame.key.get_pressed()
-        #TODO: modify this part
         pulseTx(u)
 
         distance = calculateDistance(u)
+        #distance greater than 10 move right
         if distance > 10:
             self.rect.move_ip(distance, 0)
+        #distance less than 10 move left
         if distance < 10:
             self.rect.move_ip(-distance, 0)
         # ~ if key[K_LEFT]:
