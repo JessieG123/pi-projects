@@ -1,4 +1,6 @@
-# Raspberry Pi Assignments
+# Raspberry Pi Projects
+
+School assignment. 
 
 Working with Joystick, MPU6050 and US100. 
 
